@@ -1,0 +1,470 @@
+<RCC>
+  <qresource prefix="Logos &amp; Branding">
+    <file>img/icons/3d-cube.png</file>
+    <file>img/icons/3d-printing.png</file>
+    <file>img/icons/activeNozzle.png</file>
+    <file>img/icons/Advanced Bed Leveling.png</file>
+    <file>img/icons/Basic Bed Leveling.png</file>
+    <file>img/icons/bed.png</file>
+    <file>img/icons/blank-check-box.png</file>
+    <file>img/icons/camera.png</file>
+    <file>img/icons/cancel.png</file>
+    <file>img/icons/cart.png</file>
+    <file>img/icons/chamberHeatIcon.png</file>
+    <file>img/icons/changeFilament.png</file>
+    <file>img/icons/changeFilament2.png</file>
+    <file>img/icons/check-box.png</file>
+    <file>img/icons/check-mark.png</file>
+    <file>img/icons/computer-fan-square-tool.png</file>
+    <file>img/icons/delete.png</file>
+    <file>img/icons/doorLock.png</file>
+    <file>img/icons/doorUnlock.png</file>
+    <file>img/icons/download.png</file>
+    <file>img/icons/error.png</file>
+    <file>img/icons/exclamation-mark.png</file>
+    <file>img/icons/fan-black-silhouette.png</file>
+    <file>img/icons/fan-black-silhouette-off.png</file>
+    <file>img/icons/FeedRate.png</file>
+    <file>img/icons/FeedRate_Selected.png</file>
+    <file>img/icons/filamentNozzleMenuIcon.png</file>
+    <file>img/icons/filamentSensorOff.png</file>
+    <file>img/icons/filamentSensorOn.png</file>
+    <file>img/icons/FlowRate.png</file>
+    <file>img/icons/folder.png</file>
+    <file>img/icons/home-icon-silhouette.png</file>
+    <file>img/icons/house.png</file>
+    <file>img/icons/icon.png</file>
+    <file>img/icons/IDEX.png</file>
+    <file>img/icons/information.png</file>
+    <file>img/icons/Input Shaper.png</file>
+    <file>img/icons/lens.png</file>
+    <file>img/icons/load.png</file>
+    <file>img/icons/magic-wand.png</file>
+    <file>img/icons/menu.png</file>
+    <file>img/icons/Motion.png</file>
+    <file>img/icons/Motion_Selected.png</file>
+    <file>img/icons/motor.png</file>
+    <file>img/icons/moveBedDown.png</file>
+    <file>img/icons/moveBedUp.png</file>
+    <file>img/icons/network.png</file>
+    <file>img/icons/new.png</file>
+    <file>img/icons/Nozzle Offset Icon.png</file>
+    <file>img/icons/Nozzle Offset Wizard.png</file>
+    <file>img/icons/Nozzle Offset.png</file>
+    <file>img/icons/Nozzle.png</file>
+    <file>img/icons/NozzleSelect.png</file>
+    <file>img/icons/NozzleSelect_0.png</file>
+    <file>img/icons/NozzleSelect_1.png</file>
+    <file>img/icons/pause.png</file>
+    <file>img/icons/pause-button.png</file>
+    <file>img/icons/pencil.png</file>
+    <file>img/icons/pie-chart.png</file>
+    <file>img/icons/play-button.png</file>
+    <file>img/icons/printer.png</file>
+    <file>img/icons/reload.png</file>
+    <file>img/icons/restart.png</file>
+    <file>img/icons/restore.png</file>
+    <file>img/icons/settings.png</file>
+    <file>img/icons/settings-1.png</file>
+    <file>img/icons/snowflake.png</file>
+    <file>img/icons/speedometer.png</file>
+    <file>img/icons/Spool.png</file>
+    <file>img/icons/Spool_Selected.png</file>
+    <file>img/icons/spoolHeating.png</file>
+    <file>img/icons/stop-1.png</file>
+    <file>img/icons/success.png</file>
+    <file>img/icons/switch-off.png</file>
+    <file>img/icons/switch-on.png</file>
+    <file>img/icons/thermometer.png</file>
+    <file>img/icons/thermometer_Selected.png</file>
+    <file>img/icons/Tool Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Wizard.png</file>
+    <file>img/icons/tune.png</file>
+    <file>img/icons/unload.png</file>
+    <file>img/icons/update-arrows.png</file>
+    <file>img/icons/usb.png</file>
+    <file>img/icons/verification-mark.png</file>
+    <file>img/icons/video-player-stop-button.png</file>
+    <file>img/icons/web.png</file>
+    <file>img/icons/wrench.png</file>
+    <file>img/icons/wrench_selected.png</file>
+    <file>img/Logos/control_center_logo_text.png</file>
+    <file>img/Logos/Fracktal Logo_Transparent.png</file>
+    <file>img/Logos/control_center_logo.png</file>
+    <file>img/Logos/Fracktal Logo.png</file>
+    <file>img/Logos/fracktal.png</file>
+    <file>img/Logos/thumbnail.png</file>
+  </qresource>
+  <qresource prefix="Filament Paths">
+    <file>img/Filament Paths/singleLoaded.png</file>
+    <file>img/Filament Paths/leftLoaded.png</file>
+    <file>img/Filament Paths/noneLoaded.png</file>
+    <file>img/Filament Paths/rightLoaded.png</file>
+  </qresource>
+  <qresource prefix="Misc">
+    <file>img/loader1.gif</file>
+    <file>img/loading.gif</file>
+    <file>img/PrintBase.png</file>
+    <file>img/loading_animation.gif</file>
+    <file>img/Splash BG.png</file>
+    <file>img/splash.png</file>
+    <file>img/splash_2.png</file>
+  </qresource>
+  <qresource prefix="Icons">
+    <file>img/icons/3d-cube.png</file>
+    <file>img/icons/3d-printing.png</file>
+    <file>img/icons/activeNozzle.png</file>
+    <file>img/icons/Advanced Bed Leveling.png</file>
+    <file>img/icons/Basic Bed Leveling.png</file>
+    <file>img/icons/bed.png</file>
+    <file>img/icons/blank-check-box.png</file>
+    <file>img/icons/camera.png</file>
+    <file>img/icons/cancel.png</file>
+    <file>img/icons/cart.png</file>
+    <file>img/icons/chamberHeatIcon.png</file>
+    <file>img/icons/changeFilament.png</file>
+    <file>img/icons/changeFilament2.png</file>
+    <file>img/icons/check-box.png</file>
+    <file>img/icons/check-mark.png</file>
+    <file>img/icons/computer-fan-square-tool.png</file>
+    <file>img/icons/delete.png</file>
+    <file>img/icons/doorLock.png</file>
+    <file>img/icons/doorUnlock.png</file>
+    <file>img/icons/download.png</file>
+    <file>img/icons/error.png</file>
+    <file>img/icons/exclamation-mark.png</file>
+    <file>img/icons/fan-black-silhouette.png</file>
+    <file>img/icons/fan-black-silhouette-off.png</file>
+    <file>img/icons/FeedRate.png</file>
+    <file>img/icons/FeedRate_Selected.png</file>
+    <file>img/icons/filamentNozzleMenuIcon.png</file>
+    <file>img/icons/filamentSensorOff.png</file>
+    <file>img/icons/filamentSensorOn.png</file>
+    <file>img/icons/FlowRate.png</file>
+    <file>img/icons/folder.png</file>
+    <file>img/icons/home-icon-silhouette.png</file>
+    <file>img/icons/house.png</file>
+    <file>img/icons/icon.png</file>
+    <file>img/icons/IDEX.png</file>
+    <file>img/icons/information.png</file>
+    <file>img/icons/Input Shaper.png</file>
+    <file>img/icons/lens.png</file>
+    <file>img/icons/load.png</file>
+    <file>img/icons/magic-wand.png</file>
+    <file>img/icons/menu.png</file>
+    <file>img/icons/Motion.png</file>
+    <file>img/icons/Motion_Selected.png</file>
+    <file>img/icons/motor.png</file>
+    <file>img/icons/moveBedDown.png</file>
+    <file>img/icons/moveBedUp.png</file>
+    <file>img/icons/network.png</file>
+    <file>img/icons/new.png</file>
+    <file>img/icons/Nozzle Offset Icon.png</file>
+    <file>img/icons/Nozzle Offset Wizard.png</file>
+    <file>img/icons/Nozzle Offset.png</file>
+    <file>img/icons/Nozzle.png</file>
+    <file>img/icons/NozzleSelect.png</file>
+    <file>img/icons/NozzleSelect_0.png</file>
+    <file>img/icons/NozzleSelect_1.png</file>
+    <file>img/icons/pause.png</file>
+    <file>img/icons/pause-button.png</file>
+    <file>img/icons/pencil.png</file>
+    <file>img/icons/pie-chart.png</file>
+    <file>img/icons/play-button.png</file>
+    <file>img/icons/printer.png</file>
+    <file>img/icons/reload.png</file>
+    <file>img/icons/restart.png</file>
+    <file>img/icons/restore.png</file>
+    <file>img/icons/settings.png</file>
+    <file>img/icons/settings-1.png</file>
+    <file>img/icons/snowflake.png</file>
+    <file>img/icons/speedometer.png</file>
+    <file>img/icons/Spool.png</file>
+    <file>img/icons/Spool_Selected.png</file>
+    <file>img/icons/spoolHeating.png</file>
+    <file>img/icons/stop-1.png</file>
+    <file>img/icons/success.png</file>
+    <file>img/icons/switch-off.png</file>
+    <file>img/icons/switch-on.png</file>
+    <file>img/icons/thermometer.png</file>
+    <file>img/icons/thermometer_Selected.png</file>
+    <file>img/icons/Tool Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Wizard.png</file>
+    <file>img/icons/tune.png</file>
+    <file>img/icons/unload.png</file>
+    <file>img/icons/update-arrows.png</file>
+    <file>img/icons/usb.png</file>
+    <file>img/icons/verification-mark.png</file>
+    <file>img/icons/video-player-stop-button.png</file>
+    <file>img/icons/web.png</file>
+    <file>img/icons/wrench.png</file>
+    <file>img/icons/wrench_selected.png</file>
+    <file>img/icons/3d-cube.png</file>
+    <file>img/icons/3d-printing.png</file>
+    <file>img/icons/activeNozzle.png</file>
+    <file>img/icons/Advanced Bed Leveling.png</file>
+    <file>img/icons/Basic Bed Leveling.png</file>
+    <file>img/icons/bed.png</file>
+    <file>img/icons/blank-check-box.png</file>
+    <file>img/icons/camera.png</file>
+    <file>img/icons/cancel.png</file>
+    <file>img/icons/cart.png</file>
+    <file>img/icons/chamberHeatIcon.png</file>
+    <file>img/icons/changeFilament.png</file>
+    <file>img/icons/changeFilament2.png</file>
+    <file>img/icons/check-box.png</file>
+    <file>img/icons/check-mark.png</file>
+    <file>img/icons/computer-fan-square-tool.png</file>
+    <file>img/icons/delete.png</file>
+    <file>img/icons/doorLock.png</file>
+    <file>img/icons/doorUnlock.png</file>
+    <file>img/icons/download.png</file>
+    <file>img/icons/error.png</file>
+    <file>img/icons/exclamation-mark.png</file>
+    <file>img/icons/fan-black-silhouette.png</file>
+    <file>img/icons/fan-black-silhouette-off.png</file>
+    <file>img/icons/FeedRate.png</file>
+    <file>img/icons/FeedRate_Selected.png</file>
+    <file>img/icons/filamentNozzleMenuIcon.png</file>
+    <file>img/icons/filamentSensorOff.png</file>
+    <file>img/icons/filamentSensorOn.png</file>
+    <file>img/icons/FlowRate.png</file>
+    <file>img/icons/folder.png</file>
+    <file>img/icons/home-icon-silhouette.png</file>
+    <file>img/icons/house.png</file>
+    <file>img/icons/icon.png</file>
+    <file>img/icons/IDEX.png</file>
+    <file>img/icons/information.png</file>
+    <file>img/icons/Input Shaper.png</file>
+    <file>img/icons/lens.png</file>
+    <file>img/icons/load.png</file>
+    <file>img/icons/magic-wand.png</file>
+    <file>img/icons/menu.png</file>
+    <file>img/icons/Motion.png</file>
+    <file>img/icons/Motion_Selected.png</file>
+    <file>img/icons/motor.png</file>
+    <file>img/icons/moveBedDown.png</file>
+    <file>img/icons/moveBedUp.png</file>
+    <file>img/icons/network.png</file>
+    <file>img/icons/new.png</file>
+    <file>img/icons/Nozzle Offset Icon.png</file>
+    <file>img/icons/Nozzle Offset Wizard.png</file>
+    <file>img/icons/Nozzle Offset.png</file>
+    <file>img/icons/Nozzle.png</file>
+    <file>img/icons/NozzleSelect.png</file>
+    <file>img/icons/NozzleSelect_0.png</file>
+    <file>img/icons/NozzleSelect_1.png</file>
+    <file>img/icons/pause.png</file>
+    <file>img/icons/pause-button.png</file>
+    <file>img/icons/pencil.png</file>
+    <file>img/icons/pie-chart.png</file>
+    <file>img/icons/play-button.png</file>
+    <file>img/icons/printer.png</file>
+    <file>img/icons/reload.png</file>
+    <file>img/icons/restart.png</file>
+    <file>img/icons/restore.png</file>
+    <file>img/icons/settings.png</file>
+    <file>img/icons/settings-1.png</file>
+    <file>img/icons/snowflake.png</file>
+    <file>img/icons/speedometer.png</file>
+    <file>img/icons/Spool.png</file>
+    <file>img/icons/Spool_Selected.png</file>
+    <file>img/icons/spoolHeating.png</file>
+    <file>img/icons/stop-1.png</file>
+    <file>img/icons/success.png</file>
+    <file>img/icons/switch-off.png</file>
+    <file>img/icons/switch-on.png</file>
+    <file>img/icons/thermometer.png</file>
+    <file>img/icons/thermometer_Selected.png</file>
+    <file>img/icons/Tool Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Wizard.png</file>
+    <file>img/icons/tune.png</file>
+    <file>img/icons/unload.png</file>
+    <file>img/icons/update-arrows.png</file>
+    <file>img/icons/usb.png</file>
+    <file>img/icons/verification-mark.png</file>
+    <file>img/icons/video-player-stop-button.png</file>
+    <file>img/icons/web.png</file>
+    <file>img/icons/wrench.png</file>
+    <file>img/icons/wrench_selected.png</file>
+    <file>img/icons/lens.png</file>
+    <file>img/icons/pencil.png</file>
+    <file>img/icons/switch-off.png</file>
+    <file>img/icons/switch-on.png</file>
+    <file>img/icons/tune.png</file>
+    <file>img/icons/moveBedDown.png</file>
+    <file>img/icons/moveBedUp.png</file>
+    <file>img/icons/3d-cube.png</file>
+    <file>img/icons/3d-printing.png</file>
+    <file>img/icons/activeNozzle.png</file>
+    <file>img/icons/Advanced Bed Leveling.png</file>
+    <file>img/icons/Basic Bed Leveling.png</file>
+    <file>img/icons/bed.png</file>
+    <file>img/icons/blank-check-box.png</file>
+    <file>img/icons/camera.png</file>
+    <file>img/icons/cancel.png</file>
+    <file>img/icons/cart.png</file>
+    <file>img/icons/chamberHeatIcon.png</file>
+    <file>img/icons/changeFilament.png</file>
+    <file>img/icons/changeFilament2.png</file>
+    <file>img/icons/check-box.png</file>
+    <file>img/icons/check-mark.png</file>
+    <file>img/icons/computer-fan-square-tool.png</file>
+    <file>img/icons/delete.png</file>
+    <file>img/icons/doorLock.png</file>
+    <file>img/icons/doorUnlock.png</file>
+    <file>img/icons/download.png</file>
+    <file>img/icons/error.png</file>
+    <file>img/icons/exclamation-mark.png</file>
+    <file>img/icons/fan-black-silhouette.png</file>
+    <file>img/icons/fan-black-silhouette-off.png</file>
+    <file>img/icons/FeedRate.png</file>
+    <file>img/icons/FeedRate_Selected.png</file>
+    <file>img/icons/filamentNozzleMenuIcon.png</file>
+    <file>img/icons/filamentSensorOff.png</file>
+    <file>img/icons/filamentSensorOn.png</file>
+    <file>img/icons/FlowRate.png</file>
+    <file>img/icons/folder.png</file>
+    <file>img/icons/home-icon-silhouette.png</file>
+    <file>img/icons/house.png</file>
+    <file>img/icons/icon.png</file>
+    <file>img/icons/IDEX.png</file>
+    <file>img/icons/information.png</file>
+    <file>img/icons/Input Shaper.png</file>
+    <file>img/icons/load.png</file>
+    <file>img/icons/magic-wand.png</file>
+    <file>img/icons/menu.png</file>
+    <file>img/icons/Motion.png</file>
+    <file>img/icons/Motion_Selected.png</file>
+    <file>img/icons/motor.png</file>
+    <file>img/icons/network.png</file>
+    <file>img/icons/new.png</file>
+    <file>img/icons/Nozzle Offset Icon.png</file>
+    <file>img/icons/Nozzle Offset.png</file>
+    <file>img/icons/Nozzle.png</file>
+    <file>img/icons/NozzleSelect.png</file>
+    <file>img/icons/NozzleSelect_0.png</file>
+    <file>img/icons/NozzleSelect_1.png</file>
+    <file>img/icons/pause.png</file>
+    <file>img/icons/pause-button.png</file>
+    <file>img/icons/pie-chart.png</file>
+    <file>img/icons/play-button.png</file>
+    <file>img/icons/printer.png</file>
+    <file>img/icons/reload.png</file>
+    <file>img/icons/restart.png</file>
+    <file>img/icons/restore.png</file>
+    <file>img/icons/settings.png</file>
+    <file>img/icons/settings-1.png</file>
+    <file>img/icons/snowflake.png</file>
+    <file>img/icons/speedometer.png</file>
+    <file>img/icons/Spool.png</file>
+    <file>img/icons/Spool_Selected.png</file>
+    <file>img/icons/spoolHeating.png</file>
+    <file>img/icons/stop-1.png</file>
+    <file>img/icons/success.png</file>
+    <file>img/icons/thermometer.png</file>
+    <file>img/icons/thermometer_Selected.png</file>
+    <file>img/icons/Tool Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Icon.png</file>
+    <file>img/icons/unload.png</file>
+    <file>img/icons/update-arrows.png</file>
+    <file>img/icons/usb.png</file>
+    <file>img/icons/verification-mark.png</file>
+    <file>img/icons/video-player-stop-button.png</file>
+    <file>img/icons/web.png</file>
+    <file>img/icons/wrench.png</file>
+    <file>img/icons/wrench_selected.png</file>
+    <file>img/icons/speedometer.png</file>
+    <file>img/icons/filamentNozzleMenuIcon.png</file>
+    <file>img/icons/3d-printing.png</file>
+    <file>img/icons/activeNozzle.png</file>
+    <file>img/icons/Advanced Bed Leveling.png</file>
+    <file>img/icons/Basic Bed Leveling.png</file>
+    <file>img/icons/bed.png</file>
+    <file>img/icons/blank-check-box.png</file>
+    <file>img/icons/camera.png</file>
+    <file>img/icons/cancel.png</file>
+    <file>img/icons/cart.png</file>
+    <file>img/icons/chamberHeatIcon.png</file>
+    <file>img/icons/changeFilament.png</file>
+    <file>img/icons/changeFilament2.png</file>
+    <file>img/icons/check-box.png</file>
+    <file>img/icons/check-mark.png</file>
+    <file>img/icons/computer-fan-square-tool.png</file>
+    <file>img/icons/delete.png</file>
+    <file>img/icons/doorLock.png</file>
+    <file>img/icons/doorUnlock.png</file>
+    <file>img/icons/download.png</file>
+    <file>img/icons/error.png</file>
+    <file>img/icons/exclamation-mark.png</file>
+    <file>img/icons/fan-black-silhouette.png</file>
+    <file>img/icons/fan-black-silhouette-off.png</file>
+    <file>img/icons/FeedRate.png</file>
+    <file>img/icons/FeedRate_Selected.png</file>
+    <file>img/icons/filamentSensorOff.png</file>
+    <file>img/icons/filamentSensorOn.png</file>
+    <file>img/icons/folder.png</file>
+    <file>img/icons/home-icon-silhouette.png</file>
+    <file>img/icons/house.png</file>
+    <file>img/icons/icon.png</file>
+    <file>img/icons/IDEX.png</file>
+    <file>img/icons/information.png</file>
+    <file>img/icons/Input Shaper.png</file>
+    <file>img/icons/load.png</file>
+    <file>img/icons/magic-wand.png</file>
+    <file>img/icons/menu.png</file>
+    <file>img/icons/Motion.png</file>
+    <file>img/icons/Motion_Selected.png</file>
+    <file>img/icons/motor.png</file>
+    <file>img/icons/network.png</file>
+    <file>img/icons/Nozzle Offset Icon.png</file>
+    <file>img/icons/Nozzle Offset.png</file>
+    <file>img/icons/Nozzle.png</file>
+    <file>img/icons/NozzleSelect.png</file>
+    <file>img/icons/NozzleSelect_0.png</file>
+    <file>img/icons/NozzleSelect_1.png</file>
+    <file>img/icons/pause.png</file>
+    <file>img/icons/pause-button.png</file>
+    <file>img/icons/pie-chart.png</file>
+    <file>img/icons/play-button.png</file>
+    <file>img/icons/printer.png</file>
+    <file>img/icons/reload.png</file>
+    <file>img/icons/settings.png</file>
+    <file>img/icons/settings-1.png</file>
+    <file>img/icons/snowflake.png</file>
+    <file>img/icons/Spool.png</file>
+    <file>img/icons/Spool_Selected.png</file>
+    <file>img/icons/spoolHeating.png</file>
+    <file>img/icons/stop-1.png</file>
+    <file>img/icons/success.png</file>
+    <file>img/icons/thermometer.png</file>
+    <file>img/icons/thermometer_Selected.png</file>
+    <file>img/icons/Tool Offset Icon.png</file>
+    <file>img/icons/Tool Z Offset Icon.png</file>
+    <file>img/icons/unload.png</file>
+    <file>img/icons/update-arrows.png</file>
+    <file>img/icons/usb.png</file>
+    <file>img/icons/verification-mark.png</file>
+    <file>img/icons/video-player-stop-button.png</file>
+    <file>img/icons/wrench.png</file>
+    <file>img/icons/wrench_selected.png</file>
+  </qresource>
+  <qresource prefix="Navigation">
+    <file>img/Navigation/add.png</file>
+    <file>img/Navigation/arrows.png</file>
+    <file>img/Navigation/arrows-2.png</file>
+    <file>img/Navigation/arrows-4.png</file>
+    <file>img/Navigation/arrows-5.png</file>
+    <file>img/Navigation/back-arrow.png</file>
+    <file>img/Navigation/next.png</file>
+    <file>img/Navigation/remove.png</file>
+  </qresource>
+  <qresource prefix="Keyboard">
+    <file>img/Keyboard/backspace-arrow.png</file>
+    <file>img/Keyboard/caps_lock_pinned.png</file>
+    <file>img/Keyboard/caps-lock-button.png</file>
+  </qresource>
+</RCC>

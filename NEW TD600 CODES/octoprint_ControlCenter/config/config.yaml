@@ -1,0 +1,129 @@
+accessControl:
+  autologinAs: admin
+  autologinLocal: true
+  localNetworks:
+  - 0.0.0.0/0
+  salt: 1jjovY7wxfFi7NrEuFv6eTAXgmyvECPc
+api:
+  allowCrossOrigin: true
+  key: B508534ED20348F090B4D0AD637D3660
+appearance:
+  name: Twin Dragon 600 x 600
+feature:
+  sdSupport: false
+plugins:
+  Julia2018PrintRestore:
+    _config_version: 2
+  _disabled:
+  - pi_support
+  announcements:
+    _config_version: 1
+    channels:
+      _blog:
+        read_until: 1645700400
+      _important:
+        read_until: 1698310200
+      _octopi:
+        read_until: 1646055600
+      _plugins:
+        read_until: 1648530000
+      _releases:
+        read_until: 1642677300
+    enabled_channels:
+    - _important
+  discovery:
+    upnpUuid: 7d61cbb7-f5c7-4221-949c-fd27225bf68e
+  errortracking:
+    unique_id: 4b7b81dd-6112-41ad-ba35-510c25fcb168
+  firmware_check:
+    ignore_infos: true
+  firmwareupdater:
+    _config_version: 3
+    _selected_profile: 0
+    check_after_connect: false
+    profiles:
+    - _id: 0
+      _name: Default
+      avrdude_avrmcu: m2560
+      avrdude_baudrate: 115200
+      avrdude_path: /usr/bin/avrdude
+      avrdude_programmer: wiring
+      flash_method: avrdude
+      serial_port: /dev/ttyUSB0
+  gcodeviewer:
+    _config_version: 1
+  klipper:
+    _config_version: 4
+    configuration:
+      confirm_reload: false
+      logpath: tmp/klippy.log
+    connection:
+      replace_connection_panel: false
+  softwareupdate:
+    _config_version: 9
+    checks:
+      ControlCenter:
+        disabled: false
+      pi_support:
+        disabled: true
+  tracking:
+    enabled: false
+    unique_id: bca9adfe-4139-4ffe-901d-071386764f1b
+  virtual_printer:
+    _config_version: 1
+    enabled: true
+printerProfiles:
+  default: _default
+serial:
+  additionalPorts:
+  - /tmp/printer
+  autoconnect: true
+  baudrate: 115200
+  blacklistedPorts:
+  - /dev/ttyS*
+  capabilities:
+    autoreport_pos: false
+  disconnectOnErrors: false
+  ignoreErrorsFromFirmware: true
+  port: /tmp/printer
+server:
+  commands:
+    serverRestartCommand: sudo service octoprint restart
+    systemRestartCommand: sudo reboot now
+    systemShutdownCommand: sudo shutdown
+  firstRun: false
+  host: 127.0.0.1
+  onlineCheck:
+    enabled: true
+  pluginBlacklist:
+    enabled: true
+  secretKey: AJI25uCwfpnkfxvKhd4oPs60GKkcrUfr
+  seenWizards:
+    backup: null
+    corewizard: 4
+    tracking: null
+system:
+  actions:
+  - action: streamon
+    command: sudo systemctl start webcamd
+    confirm: false
+    name: Start video stream
+  - action: streamoff
+    command: sudo systemctl stop webcamd
+    confirm: false
+    name: Stop video stream
+temperature:
+  profiles:
+  - bed: 100
+    chamber: null
+    extruder: 210
+    name: ABS
+  - bed: 60
+    chamber: null
+    extruder: 180
+    name: PLA
+webcam:
+  ffmpeg: /usr/bin/ffmpeg
+  snapshot: http://127.0.0.1:8080/?action=snapshot
+  stream: /webcam/?action=stream
+  streamRatio: '4:3'
