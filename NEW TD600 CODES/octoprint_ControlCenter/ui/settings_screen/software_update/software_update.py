@@ -122,9 +122,14 @@ class SoftwareUpdate(QWidget):
             # Finally, show the progress page within software update screen
             self.stackedWidget.setCurrentWidget(self.softwareUpdateProgressPage)
             self.logTextEdit.setTextColor(Qt.red)
-            self.logTextEdit.append("---------------------------------------------------------------\n"
-                                    "Updating " + data["name"] + " to " + data["version"] + "\n"
-                                                                                            "---------------------------------------------------------------")
+            # Safely retrieve name and version - both can be None in some OctoPrint versions
+            name = str(data.get("name") or data.get("target") or "Unknown")
+            version = str(data.get("version") or data.get("to_version") or "Unknown")
+            self.logTextEdit.append(
+                "---------------------------------------------------------------\n"
+                f"Updating {name} to {version}\n"
+                "---------------------------------------------------------------"
+            )
         except Exception as e:
             self.logger.error("Error in SoftwareUpdate.softwareUpdateProgress: {}".format(e))
             dialog.WarningOk(self, "Error in SoftwareUpdate.softwareUpdateProgress: {}".format(e), overlay=True)
@@ -155,8 +160,15 @@ class SoftwareUpdate(QWidget):
         self.logger.info("SoftwareUpdate.softwareUpdateResult started")
         try:
             messageText = ""
-            for item in data:
-                messageText += item + ": " + data[item][0] + ".\n"
+            if isinstance(data, dict):
+                for item in data:
+                    # data[item] may be a tuple/list (result, details) or just a string
+                    result_val = data[item]
+                    if isinstance(result_val, (list, tuple)) and len(result_val) > 0:
+                        status = str(result_val[0]) if result_val[0] is not None else "done"
+                    else:
+                        status = str(result_val) if result_val is not None else "done"
+                    messageText += f"{item}: {status}.\n"
             messageText += "Restart required"
             self.askAndReboot(messageText)
         except Exception as e:
@@ -173,38 +185,46 @@ class SoftwareUpdate(QWidget):
             updateAvailable = False
             self.performUpdateButton.setDisabled(True)
 
-            # Firmware version on the MKS https://github.com/FracktalWorks/OctoPrint-JuliaFirmwareUpdater
-            # self.updateListWidget.addItem(self.getFirmwareVersion())
-
             data = self.octoprint_client.getSoftwareUpdateInfo()
-            if data:
-                for item in data["information"]:
-                    # print(item)
-                    plugin = data["information"][item]
-                    info = u'\u2713' if not plugin["updateAvailable"] else u"\u2717"  # icon
-                    info += plugin["displayName"] + "  " + plugin["displayVersion"] + "\n"
-                    info += "   Available: "
-                    if "information" in plugin and "remote" in plugin["information"] and \
-                            plugin["information"]["remote"]["value"] is not None:
-                        info += plugin["information"]["remote"]["value"]
-                    else:
-                        info += "Unknown"
-                    self.updateListWidget.addItem(info)
+            if not data:
+                self.logger.warning("No data returned from getSoftwareUpdateInfo")
+                self.updateListWidget.addItem("Could not retrieve update information. Check OctoPrint connection.")
+                self.stackedWidget.setCurrentWidget(self.OTAUpdatePage)
+                return
 
-                    if plugin["updateAvailable"]:
-                        updateAvailable = True
+            information = data.get("information")
+            if not information:
+                self.logger.warning("No 'information' key in softwareupdate response")
+                self.updateListWidget.addItem("No software update information available.")
+                self.stackedWidget.setCurrentWidget(self.OTAUpdatePage)
+                return
 
-                    # if not updatable:
-                    #     self.updateListWidget.addItem(u'\u2713' + data["information"][item]["displayName"] +
-                    #                                   "  " + data["information"][item]["displayVersion"] + "\n"
-                    #                                   + "   Available: " +
-                    #                                   )
-                    # else:
-                    #     updateAvailable = True
-                    #     self.updateListWidget.addItem(u"\u2717" + data["information"][item]["displayName"] +
-                    #                                   "  " + data["information"][item]["displayVersion"] + "\n"
-                    #                                   + "   Available: " +
-                    #                                   data["information"][item]["information"]["remote"]["value"])
+            for item in information:
+                plugin = information[item]
+                display_name = plugin.get("displayName") or item
+                display_version = plugin.get("displayVersion") or "Unknown"
+                update_available = plugin.get("updateAvailable", False)
+
+                icon = u'\u2713' if not update_available else u"\u2717"
+                info = icon + str(display_name) + "  " + str(display_version) + "\n"
+                info += "   Available: "
+
+                try:
+                    remote_info = plugin.get("information", {})
+                    remote = remote_info.get("remote", {}) if remote_info else {}
+                    remote_value = remote.get("value") if remote else None
+                    info += str(remote_value) if remote_value is not None else "Unknown"
+                except Exception:
+                    info += "Unknown"
+
+                if plugin.get("error"):
+                    info += f"  [Error: {plugin['error']}]"
+
+                self.updateListWidget.addItem(info)
+
+                if update_available:
+                    updateAvailable = True
+
             if updateAvailable:
                 self.performUpdateButton.setDisabled(False)
             self.stackedWidget.setCurrentWidget(self.OTAUpdatePage)
@@ -216,9 +236,21 @@ class SoftwareUpdate(QWidget):
         """Show success message and reboot the system when OK is pressed."""
         self.logger.info("SoftwareUpdate.askAndReboot started")
         try:
+            import subprocess
             dialog.WarningOk(self, msg, overlay=overlay)
             self.logger.info("User pressed OK, proceeding with reboot after software update")
-            os.system('sudo reboot now')
+            result = subprocess.run(
+                ["sudo", "reboot", "now"],
+                capture_output=True, text=True
+            )
+            if result.returncode != 0:
+                self.logger.error(f"Reboot failed (rc={result.returncode}): {result.stderr}")
+                dialog.WarningOk(
+                    self,
+                    f"Restart failed. Please reboot the printer manually.\n\nError: {result.stderr or 'Permission denied'}",
+                    overlay=True
+                )
+                return False
             return True
         except Exception as e:
             self.logger.error(f"Error during askAndReboot: {e}")

@@ -222,8 +222,18 @@ class SettingsScreen(QWidget):
             # Use WarningOk which only has an OK button - when clicked, restart immediately
             if dialog.WarningOk(self, msg, overlay=overlay):
                 self.logger.info("User confirmed printer restart - restarting now")
-                # Restart the printer system
-                os.system('sudo reboot now')
+                result = subprocess.run(
+                    ["sudo", "reboot", "now"],
+                    capture_output=True, text=True
+                )
+                if result.returncode != 0:
+                    self.logger.error(f"Reboot command failed (rc={result.returncode}): {result.stderr}")
+                    dialog.WarningOk(
+                        self,
+                        f"Restart failed. Please reboot the printer manually.\n\nError: {result.stderr or 'Permission denied - check sudoers configuration'}",
+                        overlay=True
+                    )
+                    return False
                 return True
             return False
         except Exception as e:

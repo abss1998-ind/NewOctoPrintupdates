@@ -56,6 +56,7 @@ class MainWindow(QMainWindow):
         self.next_screen = None
         self.dialogShown = False
         self.setFixedSize(SCREEN_WIDTH, SCREEN_HEIGHT)  # Use config values for screen resolution
+        self.move(0, 0)  # Anchor to top-left corner of display
         
 
         self.loading_screen = LoadingScreen(self)

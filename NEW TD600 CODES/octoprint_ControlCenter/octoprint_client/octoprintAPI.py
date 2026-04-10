@@ -1,10 +1,12 @@
-from contextlib import contextmanager
-import os
-import requests
+﻿import base64
 import json
-import base64
+import os
+from contextlib import contextmanager
 from urllib.parse import quote
+
+import requests
 from utils.logger import get_logger
+
 logger = get_logger(__name__)
 
 class octoprintAPI:
@@ -20,10 +22,10 @@ class octoprintAPI:
         if not apiKey:
             logger.error("Missing required argument 'apiKey'")
             raise TypeError('Required argument \'apiKey\' not found or empty')
-            
+
         self.ip = ip
         self.apiKey = apiKey
-        
+
         try:
             # Try a simple request to see if the API key works
             # Keep the info, in case we need it later
@@ -65,14 +67,14 @@ class octoprintAPI:
             url = 'http://' + self.ip + '/api/files/{}'.format(encoded_location)
         else:
             url = 'http://' + self.ip + '/api/files'
-            
+
         payload = {"recursive": recursive, "force": force}
-        
+
         try:
             response = requests.get(url, headers=headers, params=payload)
             response.raise_for_status()  # Raise an exception for 4XX/5XX responses
             temp = response.json()
-            logger.debug(f"Successfully retrieved file information")
+            logger.debug("Successfully retrieved file information")
             return temp
         except requests.exceptions.RequestException as e:
             logger.error(f"Failed to retrieve file information: {str(e)}")
@@ -85,11 +87,9 @@ class octoprintAPI:
 
         Expects the same thing or a path as input
         """
-        mime = 'application/octet-stream'
-
         try:
             exists = os.path.exists(file)
-        except:
+        except Exception:
             exists = False
 
         try:
@@ -116,7 +116,7 @@ class octoprintAPI:
         :return: json response, with success of the upload and location
         """
         logger.info(f"Uploading GCODE file to {location}, select={select}, print={prnt}")
-        
+
         try:
             with self._file_tuple(file) as file_tuple:
                 files = {'file': file_tuple}
@@ -125,10 +125,10 @@ class octoprintAPI:
                 encoded_location = quote(location, safe='/')
                 url = 'http://' + self.ip + '/api/files/{}'.format(encoded_location)
                 headers = {'X-Api-Key': self.apiKey}
-                
+
                 response = requests.post(url, files=files, data=payload, headers=headers)
                 response.raise_for_status()
-                
+
                 temp = response.json()
                 logger.info("File upload completed successfully")
                 logger.debug(f"Upload response: {temp}")
@@ -147,8 +147,8 @@ class octoprintAPI:
         # mime = 'application/octet-stream'
         mime = 'image/png'
         try:
-            exists = os.path.exists(file)           
-        except:
+            exists = os.path.exists(file)
+        except Exception:
             exists = False
 
         if exists:
@@ -189,7 +189,7 @@ class octoprintAPI:
         encoded_location = quote(location, safe='/')
         url = 'http://' + self.ip + '/api/files/{}'.format(encoded_location)
         headers = {'content-type': 'application/json', 'X-Api-Key': self.apiKey}
-        
+
         try:
             response = requests.delete(url, headers=headers)
             response.raise_for_status()
@@ -250,28 +250,28 @@ class octoprintAPI:
         encoded_name = quote(name, safe='')
         url = 'http://' + self.ip + '/downloads/files/local/' + encoded_name
         headers = {'X-Api-Key': self.apiKey}
-        
+
         try:
             response = requests.get(url, headers=headers, stream=True)
             if response.status_code == 200:
                 content = response.content
-                
+
                 # Find the file data section
                 start = content.find(b';file data begin')
                 end = content.find(b';file data end')
-                
+
                 if start != -1 and end != -1:
                     # Extract the metadata section
                     metadata_section = content[start:end].decode('utf-8', errors='ignore')
-                    
+
                     # Initialize return dictionary
-                    metadata = {
+                    metadata: dict[str, str | None] = {
                         'nozzle_t0': None,
                         'nozzle_t1': None,
                         'material_t0': None,
                         'material_t1': None
                     }
-                    
+
                     # Extract nozzle and material information using string parsing
                     lines = metadata_section.split('\n')
                     for line in lines:
@@ -290,7 +290,7 @@ class octoprintAPI:
                                     metadata['nozzle_t0'] = str(float(value))
                             except (IndexError, ValueError) as e:
                                 logger.warning(f"Failed to parse nozzle_t0 from line: {line} - {e}")
-                        
+
                         elif 'nozzle_t1=' in line:
                             try:
                                 value = line.split('nozzle_t1=')[1].split(';')[0].strip()
@@ -304,7 +304,7 @@ class octoprintAPI:
                                     metadata['nozzle_t1'] = str(float(value))
                             except (IndexError, ValueError) as e:
                                 logger.warning(f"Failed to parse nozzle_t1 from line: {line} - {e}")
-                        
+
                         elif 'material_t0=' in line:
                             try:
                                 value = line.split('material_t0=')[1].split(';')[0].strip()
@@ -315,7 +315,7 @@ class octoprintAPI:
                                     metadata['material_t0'] = value
                             except IndexError as e:
                                 logger.warning(f"Failed to parse material_t0 from line: {line} - {e}")
-                        
+
                         elif 'material_t1=' in line:
                             try:
                                 value = line.split('material_t1=')[1].split(';')[0].strip()
@@ -326,7 +326,7 @@ class octoprintAPI:
                                     metadata['material_t1'] = value
                             except IndexError as e:
                                 logger.warning(f"Failed to parse material_t1 from line: {line} - {e}")
-                    
+
                     logger.info(f"Extracted GCODE metadata: {metadata}")
                     return metadata
                 else:
@@ -335,7 +335,7 @@ class octoprintAPI:
             else:
                 logger.error(f"Failed to download GCODE file {name}: HTTP {response.status_code}")
                 return False
-                
+
         except Exception as e:
             logger.error(f"Error extracting GCODE metadata from {name}: {e}")
             return False
@@ -354,7 +354,7 @@ class octoprintAPI:
         logger.debug("Retrieving current job information")
         url = 'http://' + self.ip + '/api/job'
         headers = {'X-Api-Key': self.apiKey}
-        
+
         try:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
@@ -375,7 +375,7 @@ class octoprintAPI:
         url = 'http://' + self.ip + '/api/job'
         payload = {'command': 'start'}
         headers = {'content-type': 'application/json', 'X-Api-Key': self.apiKey}
-        
+
         try:
             response = requests.post(url, data=json.dumps(payload), headers=headers)
             response.raise_for_status()
@@ -420,7 +420,7 @@ class octoprintAPI:
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # ++++++++++++++++++++++++ Connection Handling +++++++++++++++++++++++++++++++++
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+
     def version(self):
         """
         Retrieve information regarding server and API version
@@ -428,7 +428,7 @@ class octoprintAPI:
         logger.debug(f"Checking OctoPrint version at {self.ip}")
         url = 'http://' + self.ip + '/api/version'
         headers = {'X-Api-Key': self.apiKey}
-        
+
         try:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
@@ -451,6 +451,81 @@ class octoprintAPI:
         response = requests.get(url, headers=headers)
         temp = response.json()
         return temp
+
+    def getConnectionState(self):
+        """
+        Returns the current printer connection state from OctoPrint.
+        Returns a dict with 'current.state', or empty dict on error.
+        """
+        url = 'http://' + self.ip + '/api/connection'
+        headers = {'X-Api-Key': self.apiKey}
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"getConnectionState request failed: {e}")
+        return {}
+
+    def updatePrinterProfile(self, name, extruder_count, bed_width, bed_depth, bed_height):
+        """
+        Updates the running OctoPrint _default printer profile via the live API.
+        This takes effect immediately without needing a reboot.
+
+        name: display name for the profile
+        extruder_count: 1 or 2
+        bed_width/depth/height: floats (mm)
+        """
+        url = 'http://' + self.ip + '/api/printerprofiles/_default'
+        headers = {'content-type': 'application/json', 'X-Api-Key': self.apiKey}
+        offsets = [[0.0, 0.0], [0.0, 0.0]] if extruder_count == 2 else [[0.0, 0.0]]
+        payload = {
+            "profile": {
+                "name": name,
+                "extruder": {
+                    "count": extruder_count,
+                    "offsets": offsets,
+                },
+                "volume": {
+                    "width": float(bed_width),
+                    "depth": float(bed_depth),
+                    "height": float(bed_height),
+                },
+            }
+        }
+        try:
+            response = requests.patch(url, data=json.dumps(payload), headers=headers, timeout=15)
+            if response.status_code == 200:
+                logger.info(f"Live OctoPrint profile updated: {name}, extruders={extruder_count}")
+            else:
+                logger.warning(f"updatePrinterProfile: HTTP {response.status_code} - {response.text[:200]}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"updatePrinterProfile request failed: {e}")
+
+    def ensureKlipperPortRegistered(self, port="/tmp/printer", baudrate=115200):
+        """
+        Registers /tmp/printer as a valid additional port in OctoPrint 1.11.x settings
+        and sets it as the preferred connection target with autoconnect enabled.
+        Must be called before connectPrinter so the port passes OctoPrint's validation.
+        """
+        url = 'http://' + self.ip + '/api/settings'
+        headers = {'content-type': 'application/json', 'X-Api-Key': self.apiKey}
+        payload = {
+            "serial": {
+                "additionalPorts": [port],
+                "autoconnect": True,
+                "port": port,
+                "baudrate": baudrate,
+            }
+        }
+        try:
+            response = requests.post(url, data=json.dumps(payload), headers=headers, timeout=15)
+            if response.status_code == 200:
+                logger.info(f"Klipper port {port} registered in OctoPrint settings")
+            else:
+                logger.warning(f"ensureKlipperPortRegistered: HTTP {response.status_code} - {response.text[:200]}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"ensureKlipperPortRegistered request failed: {e}")
 
     def connectPrinter(self, port=None, baudrate=None, printer_profile=None, save=None, autoconnect=None):
         """
@@ -488,7 +563,11 @@ class octoprintAPI:
             payload['autoconnect'] = autoconnect
         url = 'http://' + self.ip + '/api/connection'
         headers = {'content-type': 'application/json', 'X-Api-Key': self.apiKey}
-        requests.post(url, data=json.dumps(payload), headers=headers)
+        response = requests.post(url, data=json.dumps(payload), headers=headers)
+        if response.status_code not in (200, 204):
+            raise Exception(
+                f"Failed to connect printer: HTTP {response.status_code} - {response.text}"
+            )
 
     def disconnect(self):
         """
@@ -522,14 +601,14 @@ class octoprintAPI:
         url = 'http://' + self.ip + '/api/printer'
         headers = {'X-Api-Key': self.apiKey}
         payload = {"exclude": exclude, "history": history, "limit": limit}
-        
+
         try:
             response = requests.get(url, params=payload, headers=headers)
             # Handle 409 error specifically (printer not operational)
             if response.status_code == 409:
                 logger.warning("Printer is not operational or is disconnected")
                 return response.text, response.status_code
-            
+
             response.raise_for_status()
             logger.debug("Successfully retrieved printer state")
             return response.json(), response.status_code
@@ -812,14 +891,23 @@ class octoprintAPI:
 
     def getSoftwareUpdateInfo(self):
         """
-        get information from the software update API about software module versions, ad if updates are available
-        :return:
+        get information from the software update API about software module versions, and if updates are available
+        :return: dict with 'information' key, or empty dict on error
         """
         url = 'http://' + self.ip + '/plugin/softwareupdate/check'
         headers = {'X-Api-Key': self.apiKey}
-        response = requests.get(url, headers=headers)
-        temp = response.json()
-        return temp
+        try:
+            response = requests.get(url, headers=headers, timeout=30)
+            if response.status_code != 200:
+                logger.error(f"getSoftwareUpdateInfo: HTTP {response.status_code} - {response.text[:200]}")
+                return {}
+            return response.json()
+        except ValueError as e:
+            logger.error(f"getSoftwareUpdateInfo: invalid JSON response: {e}")
+            return {}
+        except requests.exceptions.RequestException as e:
+            logger.error(f"getSoftwareUpdateInfo: request failed: {e}")
+            return {}
 
     def performSoftwareUpdate(self,force = False):
         url = 'http://' + self.ip + '/plugin/softwareupdate/update'

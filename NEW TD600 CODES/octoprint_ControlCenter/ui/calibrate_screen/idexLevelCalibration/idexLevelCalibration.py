@@ -1,9 +1,11 @@
 import os
-from PyQt5 import uic, QtGui, QtCore
-from PyQt5.QtWidgets import QWidget, QPushButton, QStackedWidget, QLabel
+
+from PyQt5 import QtGui, uic
+from PyQt5.QtWidgets import QLabel, QPushButton, QStackedWidget, QWidget
+
+from utils import dialog
 from utils.helpers import check_ui_elements
 from utils.logger import get_logger
-from utils import dialog
 
 logger = get_logger(__name__)
 
@@ -84,10 +86,8 @@ class IdexLevelCalibration(QWidget):
         self.moveZMinusButton.pressed.connect(lambda: self.octoprint_client.jog(z=-0.1))
         self.moveZPlusButton.pressed.connect(lambda: self.octoprint_client.jog(z=0.1))
 
-
-    def showEvent(self, event):
-        """Reset to the first step when the widget is shown and ensure GIF is loaded."""
-        super().showEvent(event)
+    def showEvent(self, a0: QtGui.QShowEvent) -> None:
+        super().showEvent(a0)
         try:
             self.idexConfigStep1()
             self.logger.info("IdexLevelCalibration showEvent: Reset to idexConfigStep1Page")

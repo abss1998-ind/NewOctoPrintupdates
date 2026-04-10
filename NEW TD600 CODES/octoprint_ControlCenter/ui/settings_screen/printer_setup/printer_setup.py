@@ -1,4 +1,5 @@
 import os
+import subprocess
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget, QPushButton, QComboBox, QLabel
 from PyQt5.QtCore import pyqtSignal
@@ -13,6 +14,7 @@ from utils.printer_config_manager import (
     get_printer_config_manager,
     restore_octoprint_configs
 )
+from octoprint_client import octoprint_singleton
 
 logger = get_logger(__name__)
 
@@ -183,7 +185,32 @@ class PrinterSetup(QWidget):
                     self.logger.warning("Failed to restore OctoPrint configs, but Klipper config was successful")
             
             if success:
-                # Note: No need to store selection in config store - printer.cfg is the source of truth
+                # Step 1: Update OctoPrint's LIVE running profile via API so the change
+                # takes effect immediately in the running instance (no reboot required for this part).
+                try:
+                    printer_cfg = manager.get_printer_config_from_variables(selected_printer)
+                    client = octoprint_singleton.get_client()
+                    client.updatePrinterProfile(
+                        name=printer_cfg.get('name', selected_display_name),
+                        extruder_count=printer_cfg.get('extruder_count', 1),
+                        bed_width=printer_cfg.get('bed_width', 200),
+                        bed_depth=printer_cfg.get('bed_depth', 200),
+                        bed_height=printer_cfg.get('bed_height', 200),
+                    )
+                    self.logger.info("Updated live OctoPrint printer profile via API")
+                except Exception as e:
+                    self.logger.warning(f"Could not update live OctoPrint profile (will apply after reboot): {e}")
+
+                # Step 2: Send FIRMWARE_RESTART so Klipper immediately reloads the new .cfg files.
+                # This is much faster than a full reboot and means the printer type changes right away.
+                try:
+                    self.statusLabel.setText("Sending Klipper firmware restart...")
+                    octoprint_singleton.get_client().gcode("FIRMWARE_RESTART")
+                    self.logger.info("Sent FIRMWARE_RESTART to Klipper")
+                except Exception as e:
+                    self.logger.warning(f"Could not send FIRMWARE_RESTART (will apply after reboot): {e}")
+
+                # Step 3: Reload local UI model from the new Klipper config
                 try:
                     if hasattr(self.mainSettingsWidget, 'main_window') and \
                        hasattr(self.mainSettingsWidget.main_window, 'printer_model'):
@@ -244,8 +271,18 @@ class PrinterSetup(QWidget):
             # Use WarningOk which only has an OK button - when clicked, restart immediately
             if dialog.WarningOk(self, msg, overlay=overlay):
                 self.logger.info("User confirmed printer restart - restarting now")
-                # Restart the printer system
-                os.system('sudo reboot now')
+                result = subprocess.run(
+                    ["sudo", "reboot", "now"],
+                    capture_output=True, text=True
+                )
+                if result.returncode != 0:
+                    self.logger.error(f"Reboot command failed (rc={result.returncode}): {result.stderr}")
+                    dialog.WarningOk(
+                        self,
+                        f"Restart failed. Please reboot the printer manually.\n\nError: {result.stderr or 'Permission denied - check sudoers configuration'}",
+                        overlay=True
+                    )
+                    return False
                 return True
             return False
         except Exception as e:

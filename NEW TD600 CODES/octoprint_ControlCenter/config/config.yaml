@@ -72,6 +72,20 @@ plugins:
   virtual_printer:
     _config_version: 1
     enabled: true
+  serial_connector:
+    _config_version: 3
+    additionalPorts:
+    - /tmp/printer
+    blocklistedPorts:
+    - /dev/ttyS*
+    errorHandling: ignore
+printerConnection:
+  autoconnect: true
+  preferred:
+    connector: serial
+    parameters:
+      baudrate: 115200
+      port: /tmp/printer
 printerProfiles:
   default: _default
 serial:

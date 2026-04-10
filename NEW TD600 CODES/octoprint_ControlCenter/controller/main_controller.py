@@ -62,11 +62,13 @@ class ThreadConnectionCheck(QtCore.QThread):
     def run(self):
         """Run the connectivity check to verify OctoPrint is accessible.
         
-        Attempts to connect to OctoPrint with a 60-second timeout. If connection
+        Attempts to connect to OctoPrint with a 120-second timeout. If connection
         fails, emits startup_error_signal. On success, emits loaded_signal.
+        OctoPrint 1.11.x may take longer to start due to settings migration.
         """        
         self.shutdown_flag = False
         uptime = 0
+        OCTOPRINT_TIMEOUT = 120  # seconds - increased for OctoPrint 1.11.x startup migration
         
         self.logger.info("Running OctoPrint connectivity check")
         self.progress_signal.emit(10, "Starting OctoPrint connection check...")
@@ -74,42 +76,79 @@ class ThreadConnectionCheck(QtCore.QThread):
         # Keep trying until OctoPrint connects or timeout
         while True:
             try:
-                # If we've been trying for more than 60 seconds, give up
-                if uptime > 60:
+                # If we've been trying for more than OCTOPRINT_TIMEOUT seconds, give up
+                if uptime > OCTOPRINT_TIMEOUT:
                     self.shutdown_flag = True
-                    self.logger.error("OctoPrint connection timeout after 60 seconds")
+                    self.logger.error(f"OctoPrint connection timeout after {OCTOPRINT_TIMEOUT} seconds")
                     self.progress_signal.emit(0, "Connection timeout - Please check OctoPrint service")
                     self.startup_error_signal.emit()
                     break
                 
                 # Update progress based on time elapsed
-                progress = min(20 + (uptime * 40 / 60), 60)  # Progress from 20% to 60% over 60 seconds
-                self.progress_signal.emit(int(progress), f"Connecting hardware, attempt {uptime + 1}/60")
+                progress = min(20 + (uptime * 40 / OCTOPRINT_TIMEOUT), 60)
+                self.progress_signal.emit(int(progress), f"Connecting to OctoPrint, attempt {uptime + 1}/{OCTOPRINT_TIMEOUT}...")
                 # Attempt to connect to OctoPrint
                 octoprint_singleton.initialize(self.ip, self.api_key)
                 
                 # If we're not in virtual mode, try to connect to the printer
                 if not self.virtual:
+                    # Wait for Klipper's Unix socket to be created before connecting.
+                    # After an OctoPrint update the system may take longer to start Klipper.
+                    KLIPPER_SOCKET = "/tmp/printer"
+                    KLIPPER_WAIT_TIMEOUT = 90  # seconds
+                    klipper_wait = 0
+                    self.logger.info(f"Waiting for Klipper socket at {KLIPPER_SOCKET}...")
+                    while klipper_wait < KLIPPER_WAIT_TIMEOUT:
+                        if os.path.exists(KLIPPER_SOCKET):
+                            self.logger.info(f"Klipper socket ready after {klipper_wait}s")
+                            break
+                        time.sleep(1)
+                        klipper_wait += 1
+                        wait_progress = min(61 + int(klipper_wait * 13 / KLIPPER_WAIT_TIMEOUT), 74)
+                        self.progress_signal.emit(wait_progress, f"Waiting for Klipper to start... ({klipper_wait}s)")
+
+                    client = octoprint_singleton.get_client()
+
+                    # Step 1: Register /tmp/printer in OctoPrint 1.11.x settings so the
+                    # port passes validation. This is a no-op on older versions.
+                    self.progress_signal.emit(76, "Registering Klipper port in OctoPrint settings...")
+                    client.ensureKlipperPortRegistered(port="/tmp/printer", baudrate=115200)
+
+                    # Step 2: Check if OctoPrint already auto-connected to Klipper at boot
+                    # (printerConnection.autoconnect=true). If so, skip the connect call.
                     try:
-                        self.progress_signal.emit(75, "Connecting to Klipper ...")
-                        # First try to connect to the Klipper printer
-                        octoprint_singleton.get_client().connectPrinter(port="/tmp/printer", baudrate=115200)
-                        self.logger.info("Connected to Klipper printer on /tmp/printer")
-                        self.progress_signal.emit(85, "Connected to Klipper printer")
-                    except Exception as e:
-                        # If that fails, try to connect in virtual mode
-                        self.logger.warning(f"Failed to connect to Klipper printer: {e}")
-                        self.progress_signal.emit(80, "Falling back to virtual printer...")
-                        # Attempt to connect in virtual mode
+                        conn_state = client.getConnectionState()
+                        current_state = conn_state.get("current", {}).get("state", "")
+                        CONNECTED_STATES = {"Operational", "Printing", "Paused", "Pausing",
+                                            "Resuming", "Cancelling", "Finishing", "Starting"}
+                        already_connected = current_state in CONNECTED_STATES
+                    except Exception:
+                        already_connected = False
+                        current_state = "Unknown"
+
+                    if already_connected:
+                        self.logger.info(f"OctoPrint already connected to printer (state: {current_state}), skipping connect call")
+                        self.progress_signal.emit(85, f"Klipper connected ({current_state})")
+                    else:
                         try:
-                            octoprint_singleton.get_client().connectPrinter(port="VIRTUAL", baudrate=115200)
-                            self.logger.info("Connected to printer in VIRTUAL mode")
-                            self.progress_signal.emit(85, "Connected to virtual printer")
-                            # Notify UI thread to show fallback dialog
-                            self.virtual_fallback_signal.emit("There was an issue conencting to Klipper, conencted to Virtual Printer instead for diagnosis")
+                            self.progress_signal.emit(78, f"Connecting to Klipper (current state: {current_state})...")
+                            client.connectPrinter(port="/tmp/printer", baudrate=115200)
+                            self.logger.info("Connected to Klipper printer on /tmp/printer")
+                            self.progress_signal.emit(85, "Connected to Klipper printer")
                         except Exception as e:
-                            self.logger.error(f"Failed to connect to printer in VIRTUAL mode: {e}")
-                            self.progress_signal.emit(85, "Printer connection failed - continuing...")
+                            # If that fails, try to connect in virtual mode
+                            self.logger.warning(f"Failed to connect to Klipper printer: {e}")
+                            self.progress_signal.emit(80, "Falling back to virtual printer...")
+                            try:
+                                client.connectPrinter(port="VIRTUAL", baudrate=115200)
+                                self.logger.info("Connected to printer in VIRTUAL mode")
+                                self.progress_signal.emit(85, "Connected to virtual printer")
+                                self.virtual_fallback_signal.emit(
+                                    "There was an issue connecting to Klipper, connected to Virtual Printer instead for diagnosis"
+                                )
+                            except Exception as e2:
+                                self.logger.error(f"Failed to connect to printer in VIRTUAL mode: {e2}")
+                                self.progress_signal.emit(85, "Printer connection failed - continuing...")
 
                 # If we got here, connection was successful
                 self.progress_signal.emit(90, "OctoPrint connection successful")
@@ -421,8 +460,18 @@ class MainController(QtCore.QObject):
             # Use WarningOk which only has an OK button - when clicked, restart immediately
             if dialog.WarningOk(self.main_window, msg, overlay=overlay):
                 self.logger.info("User confirmed printer restart - restarting now")
-                # Restart the printer system
-                os.system('sudo reboot now')
+                result = subprocess.run(
+                    ["sudo", "reboot", "now"],
+                    capture_output=True, text=True
+                )
+                if result.returncode != 0:
+                    self.logger.error(f"Reboot command failed (rc={result.returncode}): {result.stderr}")
+                    dialog.WarningOk(
+                        self.main_window,
+                        f"Restart failed. Please reboot the printer manually.\n\nError: {result.stderr or 'Permission denied - check sudoers configuration'}",
+                        overlay=True
+                    )
+                    return False
                 return True
             return False
         except Exception as e:
