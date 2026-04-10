@@ -1,6 +1,6 @@
 import os
 from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget, QPushButton, QStackedWidget, QListWidget, QTextEdit
+from PyQt5.QtWidgets import QWidget, QPushButton, QStackedWidget, QListWidget, QTextEdit, QScroller, QAbstractItemView
 from PyQt5.QtCore import Qt
 from utils.helpers import check_ui_elements
 from utils import dialog
@@ -65,6 +65,14 @@ class SoftwareUpdate(QWidget):
         self.performUpdateButton.clicked.connect(
             lambda: self.octoprint_client.performSoftwareUpdate()
         )
+
+        # Enable touch/drag scrolling for touchscreen
+        self.updateListWidget.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.updateListWidget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.updateListWidget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        for gesture in (QScroller.LeftMouseButtonGesture, QScroller.TouchGesture):
+            QScroller.grabGesture(self.updateListWidget.viewport(), gesture)
+            QScroller.grabGesture(self.logTextEdit.viewport(), gesture)
 
         # Set the default page in stacked widget
         self.stackedWidget.setCurrentWidget(self.OTAUpdatePage)

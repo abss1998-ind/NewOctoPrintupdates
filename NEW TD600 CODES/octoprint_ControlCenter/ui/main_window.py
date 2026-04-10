@@ -1,31 +1,24 @@
-import time
+# ruff: noqa: I001
+from PyQt5.QtWidgets import QMainWindow, QSizePolicy, QStackedWidget, QVBoxLayout, QWidget
 
-import requests
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QStackedWidget, QMessageBox, QSizePolicy
+import ui.resources.resource_rc  # noqa: F401 - side-effect import for Qt resources
+from config import SCREEN_HEIGHT, SCREEN_WIDTH
+from ui.calibrate_screen.calibrate_screen import CalibrateScreen
+from ui.control_screen.control_screen import ControlScreen
+from ui.filament_management_screen.filamentManagementScreen import filamentManagementScreen
 from ui.home_screen.home_screen import HomeScreen
 from ui.loading_screen.loading_screen import LoadingScreen
 from ui.menu_screen.menu_screen import MenuScreen
-from ui.settings_screen.settings_screen import SettingsScreen
-from ui.control_screen.control_screen import ControlScreen
 from ui.print_from_location.print_from_location import PrintFromLocation
-from ui.calibrate_screen.calibrate_screen import CalibrateScreen
-from ui.filament_management_screen.filamentManagementScreen import filamentManagementScreen
-from utils.logger import get_logger
-import os
-import subprocess
-import ui.resources.resource_rc  # Ensure resources are loaded
-import config
-from utils.printer_ui_config import apply_nozzle_config_to_all_screens, is_dual_nozzle_printer
-from utils.styles import printer_status_red, printer_status_green, printer_status_amber, printer_status_blue
-# Import the specific dialog functions needed, not just the dialog module
-from utils.dialog import WarningOk, WarningYesNo
-import glob
+from ui.settings_screen.settings_screen import SettingsScreen
 from utils import dialog
-from config import SCREEN_WIDTH, SCREEN_HEIGHT
+from utils.dialog import WarningOk
+from utils.logger import get_logger
+from utils.printer_ui_config import apply_nozzle_config_to_all_screens
 
 class MainWindow(QMainWindow):
     def __init__(self, controller=None, printer_model=None):
-        super(MainWindow, self).__init__()
+        super().__init__()
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info("Initializing MainWindow")
 
@@ -38,15 +31,15 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.central_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
-        self.central_widget.setLayout(self.layout)
+        self.main_layout = QVBoxLayout()
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)
+        self.central_widget.setLayout(self.main_layout)
 
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.stacked_widget.setStyleSheet("background-color: rgb(40, 40, 40);")
-        self.layout.addWidget(self.stacked_widget)
+        self.main_layout.addWidget(self.stacked_widget)
 
         # Screen navigation history for back button functionality
         self.screen_history = []
@@ -57,7 +50,7 @@ class MainWindow(QMainWindow):
         self.dialogShown = False
         self.setFixedSize(SCREEN_WIDTH, SCREEN_HEIGHT)  # Use config values for screen resolution
         self.move(0, 0)  # Anchor to top-left corner of display
-        
+
 
         self.loading_screen = LoadingScreen(self)
         self.stacked_widget.addWidget(self.loading_screen)
@@ -104,6 +97,7 @@ class MainWindow(QMainWindow):
                 self.logger.info("Loading full UI - OctoPrint connection successful")
                 try:
                     # Load all screens
+                    assert self.controller is not None
                     self.octoprint_client = self.controller.octoprint_client
                     self.home_screen = HomeScreen(self, minimalUI=False)
                     self.stacked_widget.addWidget(self.home_screen)
@@ -136,17 +130,17 @@ class MainWindow(QMainWindow):
                     # Adjust the size of the main window to fit its contents
                     self.adjustSize()
                     self.logger.info("MainWindow initialized successfully")
-                    
+
                     # Apply single/dual nozzle configuration
                     self._apply_nozzle_configuration()
-                    
+
                 except Exception as e:
                     self.logger.exception("Error during MainWindow initialization")
                     WarningOk(self,
                             f"Application Error\n\nAn error occurred while initializing the application: {str(e)}\n\nPlease check the logs for more details.",
                             overlay=True)
                 self.switch_to_home_screen()
-    
+
 
     # Screen Navigation Methods
     def switch_screen(self, widget):
@@ -195,11 +189,11 @@ class MainWindow(QMainWindow):
     def switch_to_filament_management_screen(self):
         self.logger.debug("Switching to filament/nozzle screen")
         self.switch_screen(self.filament_management_screen)
-    
+
     def _apply_nozzle_configuration(self):
         """Apply single/dual nozzle configuration by hiding appropriate UI elements."""
         apply_nozzle_config_to_all_screens(self)
-    
+
     def _hide_dual_nozzle_elements(self):
         """Hide all UI elements related to the second nozzle/tool when in single nozzle mode."""
         # This method is now handled by apply_nozzle_config_to_all_screens
