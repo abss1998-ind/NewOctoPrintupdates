@@ -56,7 +56,7 @@ plugins:
     _config_version: 4
     configuration:
       confirm_reload: false
-      logpath: tmp/klippy.log
+      logpath: /home/pi/printer_data/logs/klippy.log
     connection:
       replace_connection_panel: false
   softwareupdate:
